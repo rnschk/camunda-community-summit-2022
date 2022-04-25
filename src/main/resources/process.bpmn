@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:process id="ccs2022-process" name="Community Summit 2022" isExecutable="true">
+    <bpmn:sequenceFlow id="SequenceFlow_1fp17al" sourceRef="StartEvent_1" targetRef="Activity_04cvjsy" />
+    <bpmn:subProcess id="Activity_04cvjsy" camunda:asyncBefore="true">
+      <bpmn:incoming>SequenceFlow_1fp17al</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bng5qe</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:asyncBefore="true">
+        <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">${multi}</bpmn:loopCardinality>
+      </bpmn:multiInstanceLoopCharacteristics>
+      <bpmn:startEvent id="Event_16yns9u">
+        <bpmn:outgoing>Flow_0zpieay</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:endEvent id="EndEvent_0x6ir2l">
+        <bpmn:extensionElements />
+        <bpmn:incoming>Flow_07buad4</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:parallelGateway id="SplitGateway">
+        <bpmn:incoming>Flow_0zpieay</bpmn:incoming>
+        <bpmn:outgoing>split-to-external</bpmn:outgoing>
+        <bpmn:outgoing>split-to-delegate</bpmn:outgoing>
+      </bpmn:parallelGateway>
+      <bpmn:serviceTask id="Activity_1goytey" name="Simple Delegate" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:delegateExpression="${ ccs22Delegate }">
+        <bpmn:extensionElements>
+          <camunda:executionListener delegateExpression="${ merge }" event="end" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>split-to-delegate</bpmn:incoming>
+        <bpmn:outgoing>Flow_1s9jhbq</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:serviceTask id="Activity_0v496f0" name="Simple&#10;External Task" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:type="external" camunda:topic="ccs22">
+        <bpmn:extensionElements>
+          <camunda:executionListener delegateExpression="${ merge }" event="end" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>split-to-external</bpmn:incoming>
+        <bpmn:outgoing>Flow_14jyd8a</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_1s9jhbq" sourceRef="Activity_1goytey" targetRef="Gateway_1erean6" />
+      <bpmn:sequenceFlow id="split-to-external" sourceRef="SplitGateway" targetRef="Activity_0v496f0" />
+      <bpmn:sequenceFlow id="split-to-delegate" sourceRef="SplitGateway" targetRef="Activity_1goytey" />
+      <bpmn:sequenceFlow id="Flow_0zpieay" sourceRef="Event_16yns9u" targetRef="SplitGateway" />
+      <bpmn:sequenceFlow id="Flow_07buad4" sourceRef="Gateway_1erean6" targetRef="EndEvent_0x6ir2l" />
+      <bpmn:parallelGateway id="Gateway_1erean6">
+        <bpmn:incoming>Flow_1s9jhbq</bpmn:incoming>
+        <bpmn:incoming>Flow_14jyd8a</bpmn:incoming>
+        <bpmn:outgoing>Flow_07buad4</bpmn:outgoing>
+      </bpmn:parallelGateway>
+      <bpmn:sequenceFlow id="Flow_14jyd8a" sourceRef="Activity_0v496f0" targetRef="Gateway_1erean6" />
+    </bpmn:subProcess>
+    <bpmn:endEvent id="Event_0t4ou9m">
+      <bpmn:extensionElements>
+        <camunda:executionListener delegateExpression="${ results }" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0bng5qe</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0bng5qe" sourceRef="Activity_04cvjsy" targetRef="Event_0t4ou9m" />
+    <bpmn:startEvent id="StartEvent_1" camunda:asyncAfter="true" camunda:formRef="start-form" camunda:formRefBinding="latest">
+      <bpmn:outgoing>SequenceFlow_1fp17al</bpmn:outgoing>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ccs2022-process">
+      <bpmndi:BPMNEdge id="Flow_0bng5qe_di" bpmnElement="Flow_0bng5qe">
+        <di:waypoint x="810" y="190" />
+        <di:waypoint x="872" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1fp17al_di" bpmnElement="SequenceFlow_1fp17al">
+        <di:waypoint x="168" y="190" />
+        <di:waypoint x="240" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_04cvjsy_di" bpmnElement="Activity_04cvjsy" isExpanded="true">
+        <dc:Bounds x="240" y="40" width="570" height="300" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_14jyd8a_di" bpmnElement="Flow_14jyd8a">
+        <di:waypoint x="560" y="260" />
+        <di:waypoint x="646" y="260" />
+        <di:waypoint x="646" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07buad4_di" bpmnElement="Flow_07buad4">
+        <di:waypoint x="671" y="185" />
+        <di:waypoint x="722" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zpieay_di" bpmnElement="Flow_0zpieay">
+        <di:waypoint x="308" y="185" />
+        <di:waypoint x="345" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1grqe7o_di" bpmnElement="split-to-delegate">
+        <di:waypoint x="370" y="160" />
+        <di:waypoint x="370" y="110" />
+        <di:waypoint x="460" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bz2nsd_di" bpmnElement="split-to-external">
+        <di:waypoint x="370" y="210" />
+        <di:waypoint x="370" y="260" />
+        <di:waypoint x="460" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s9jhbq_di" bpmnElement="Flow_1s9jhbq">
+        <di:waypoint x="560" y="110" />
+        <di:waypoint x="646" y="110" />
+        <di:waypoint x="646" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_16yns9u_di" bpmnElement="Event_16yns9u">
+        <dc:Bounds x="272" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0x6ir2l_di" bpmnElement="EndEvent_0x6ir2l">
+        <dc:Bounds x="722" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_090rnk0_di" bpmnElement="SplitGateway">
+        <dc:Bounds x="345" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1e1hfxk_di" bpmnElement="Activity_1goytey">
+        <dc:Bounds x="460" y="70" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ddz7ah_di" bpmnElement="Activity_0v496f0">
+        <dc:Bounds x="460" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0a3dnrd_di" bpmnElement="Gateway_1erean6">
+        <dc:Bounds x="621" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0t4ou9m_di" bpmnElement="Event_0t4ou9m">
+        <dc:Bounds x="872" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="132" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

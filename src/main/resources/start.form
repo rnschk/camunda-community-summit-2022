@@ -1,0 +1,39 @@
+{
+  "components": [
+    {
+      "text": "# JavaDelegate VS ExternalTask",
+      "type": "text",
+      "id": "Field_00o0eu9"
+    },
+    {
+      "label": "Multi-Instances",
+      "type": "number",
+      "id": "Field_0w5ezcr",
+      "key": "multi",
+      "defaultValue": 1,
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Sleep (in ms)",
+      "type": "number",
+      "id": "Field_0cygrqd",
+      "key": "sleep",
+      "validate": {
+        "required": true
+      },
+      "disabled": false,
+      "defaultValue": 10
+    }
+  ],
+  "type": "default",
+  "id": "start-form",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.0.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.17.0",
+  "schemaVersion": 4
+}

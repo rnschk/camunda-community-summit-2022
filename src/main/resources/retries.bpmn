@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_03bgnas" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.7.3" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="retries-pocess" name="Different Retry Settings" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_0j9sh1h" sourceRef="StartEvent_1" targetRef="Gateway_1yzemfh" />
+    <bpmn:sequenceFlow id="Flow_16d50yg" sourceRef="Gateway_1yzemfh" targetRef="Activity_1odm9om" />
+    <bpmn:parallelGateway id="Gateway_1yzemfh">
+      <bpmn:incoming>Flow_0j9sh1h</bpmn:incoming>
+      <bpmn:outgoing>Flow_16d50yg</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1a8id0q</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0zfx3uw</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1w0ho39</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_1a8id0q" sourceRef="Gateway_1yzemfh" targetRef="Activity_1rkstm6" />
+    <bpmn:sequenceFlow id="Flow_0zfx3uw" sourceRef="Gateway_1yzemfh" targetRef="Activity_0gjntan" />
+    <bpmn:sequenceFlow id="Flow_1w0ho39" sourceRef="Gateway_1yzemfh" targetRef="Activity_16kdl3b" />
+    <bpmn:sequenceFlow id="Flow_1ogtala" sourceRef="Activity_1odm9om" targetRef="Gateway_0pckova" />
+    <bpmn:parallelGateway id="Gateway_0pckova">
+      <bpmn:incoming>Flow_1ogtala</bpmn:incoming>
+      <bpmn:incoming>Flow_0qs5vr1</bpmn:incoming>
+      <bpmn:incoming>Flow_1shruwf</bpmn:incoming>
+      <bpmn:incoming>Flow_0j2nnif</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vekwsm</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_0qs5vr1" sourceRef="Activity_1rkstm6" targetRef="Gateway_0pckova" />
+    <bpmn:sequenceFlow id="Flow_1shruwf" sourceRef="Activity_0gjntan" targetRef="Gateway_0pckova" />
+    <bpmn:sequenceFlow id="Flow_0j2nnif" sourceRef="Activity_16kdl3b" targetRef="Gateway_0pckova" />
+    <bpmn:endEvent id="Event_1uv757x">
+      <bpmn:incoming>Flow_1vekwsm</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1vekwsm" sourceRef="Gateway_0pckova" targetRef="Event_1uv757x" />
+    <bpmn:serviceTask id="Activity_1odm9om" name="Default&#10;Delegate" camunda:asyncBefore="true" camunda:delegateExpression="${ delegate }">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_16d50yg</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ogtala</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1rkstm6" name="Retry&#10;Delegate" camunda:asyncBefore="true" camunda:delegateExpression="${ delegate }">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R1000/PT1M</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1a8id0q</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qs5vr1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0gjntan" name="Default&#10;Worker" camunda:asyncBefore="true" camunda:type="external" camunda:topic="no-retry-settings">
+      <bpmn:incoming>Flow_0zfx3uw</bpmn:incoming>
+      <bpmn:outgoing>Flow_1shruwf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_16kdl3b" name="Retry&#10;Worker" camunda:asyncBefore="true" camunda:type="external" camunda:topic="code-retry-settings">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R9999/PT1M</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1w0ho39</bpmn:incoming>
+      <bpmn:outgoing>Flow_0j2nnif</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0j9sh1h</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_02tba34">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="retries-pocess">
+      <bpmndi:BPMNEdge id="Flow_1vekwsm_di" bpmnElement="Flow_1vekwsm">
+        <di:waypoint x="635" y="117" />
+        <di:waypoint x="712" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j2nnif_di" bpmnElement="Flow_0j2nnif">
+        <di:waypoint x="510" y="480" />
+        <di:waypoint x="610" y="480" />
+        <di:waypoint x="610" y="142" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1shruwf_di" bpmnElement="Flow_1shruwf">
+        <di:waypoint x="510" y="360" />
+        <di:waypoint x="610" y="360" />
+        <di:waypoint x="610" y="142" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qs5vr1_di" bpmnElement="Flow_0qs5vr1">
+        <di:waypoint x="510" y="236" />
+        <di:waypoint x="610" y="236" />
+        <di:waypoint x="610" y="142" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ogtala_di" bpmnElement="Flow_1ogtala">
+        <di:waypoint x="510" y="117" />
+        <di:waypoint x="585" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1w0ho39_di" bpmnElement="Flow_1w0ho39">
+        <di:waypoint x="310" y="142" />
+        <di:waypoint x="310" y="480" />
+        <di:waypoint x="410" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zfx3uw_di" bpmnElement="Flow_0zfx3uw">
+        <di:waypoint x="310" y="142" />
+        <di:waypoint x="310" y="360" />
+        <di:waypoint x="410" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a8id0q_di" bpmnElement="Flow_1a8id0q">
+        <di:waypoint x="310" y="142" />
+        <di:waypoint x="310" y="236" />
+        <di:waypoint x="410" y="236" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16d50yg_di" bpmnElement="Flow_16d50yg">
+        <di:waypoint x="335" y="117" />
+        <di:waypoint x="410" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j9sh1h_di" bpmnElement="Flow_0j9sh1h">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="285" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_0oup1d7_di" bpmnElement="Gateway_1yzemfh">
+        <dc:Bounds x="285" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_00roats_di" bpmnElement="Gateway_0pckova">
+        <dc:Bounds x="585" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1uv757x_di" bpmnElement="Event_1uv757x">
+        <dc:Bounds x="712" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0nrvurm_di" bpmnElement="Activity_1odm9om">
+        <dc:Bounds x="410" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xioore_di" bpmnElement="Activity_1rkstm6">
+        <dc:Bounds x="410" y="196" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1nnaohs_di" bpmnElement="Activity_0gjntan">
+        <dc:Bounds x="410" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0sp636c_di" bpmnElement="Activity_16kdl3b">
+        <dc:Bounds x="410" y="440" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0uxcir3_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="184" y="142" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

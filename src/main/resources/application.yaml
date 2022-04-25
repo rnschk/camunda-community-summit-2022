@@ -1,0 +1,22 @@
+spring.datasource.url: jdbc:h2:mem:css22
+
+camunda.bpm:
+  admin-user:
+    id: demo
+    password: demo
+  filter:
+    create: All
+  default-serialization-format: application/json
+  deployment-resource-pattern:
+    - "*.bpmn"
+    - "*.dmn"
+    - "*.form"
+  generic-properties:
+    properties:
+      initializeTelemetry: false
+      telemetryReporterActivate: false
+  client:
+    base-url: http://localhost:8080/engine-rest
+    async-response-timeout: 10000
+    max-tasks: 10
+    worker-id: ccs2022-worker
